@@ -1,233 +1,201 @@
 # GraphGen Enhanced
 
-基于知识图谱的故障诊断预训练知识生成系统
+一个完整的故障诊断知识图谱生成和预训练数据处理系统，支持端到端的知识提取、去重、质量检测和过滤流程。
 
-## 项目概述
+## 🚀 项目特性
 
-GraphGen Enhanced 是一个专门针对故障诊断领域的知识图谱构建和预训练知识生成系统。它能够从故障案例文本中提取结构化知识，并生成高质量的预训练数据。
+### 核心功能
+- **知识图谱提取**: 从故障文本中自动提取实体和关系
+- **预训练数据生成**: 生成多种类型的预训练数据
+- **智能去重**: 基于 MinHash 算法的数据去重
+- **质量检测**: 基于幻觉检测的数据质量评估
+- **数据过滤**: 按类别和按条的质量过滤
 
-## 核心功能
+### 支持的数据类型
+- **实体描述**: 设备、信号、问题等实体的定义
+- **关系描述**: 实体间的逻辑关系
+- **问答对**: 故障诊断相关的问答
+- **推理链**: 故障推理的逻辑链条
+- **推理路径**: 完整的故障诊断路径
 
-1. **知识图谱提取**: 从故障案例文本中提取实体和关系
-2. **预训练知识生成**: 基于知识图谱生成结构化的预训练知识
-3. **质量评估**: 评估生成知识的完整性和质量
-4. **批量处理**: 支持批量处理多个故障案例
+### 质量评估标准
+- **置信度级别**: 只有达到 `high_confidence` 的数据才被认为是好的合成数据
+- **按类别评估**: 对每种数据类型进行专门的质量评估
+- **按条过滤**: 对每个类别中的每条数据单独进行质量评估
 
-## 项目结构
+## 📁 项目结构
 
 ```
 GraphGen-Enhanced/
-├── config.py                          # 配置文件
-├── main.py                            # 主程序入口（包含所有核心功能）
-├── requirements.txt                   # 依赖包
-├── core/                              # 核心模块
-│   ├── knowledge_extractor.py         # 知识图谱提取器
-│   └── pretrain_knowledge_generator.py # 预训练知识生成器（包含多跳推理）
-├── models/                            # 模型模块
-│   └── llm_client.py                  # DeepSeek LLM客户端
-├── templates/                         # 提示词模板
-│   └── fault_diagnosis_templates.py   # 故障诊断专用模板
-├── utils/                             # 工具模块
-│   └── logger.py                      # 日志工具
-├── data/                              # 数据目录
-├── cache/                             # 缓存目录
-└── logs/                              # 日志目录
+├── core/                          # 核心模块
+│   ├── knowledge_extractor.py     # 知识图谱提取
+│   └── pretrain_knowledge_generator.py  # 预训练数据生成
+├── huanjue/                       # 幻觉检测模块
+│   ├── hallucination_detector.py  # 质量检测器
+│   ├── entity_extractor.py        # 实体提取
+│   └── main.py                    # 检测模块入口
+├── utils/                         # 工具模块
+│   ├── minhash_deduplicator.py    # MinHash去重
+│   └── logger.py                  # 日志工具
+├── models/                        # 模型模块
+│   └── llm_client.py              # LLM客户端
+├── templates/                     # 模板文件
+│   └── fault_diagnosis_templates.py  # 故障诊断模板
+├── data/                          # 数据目录
+├── training_data/                 # 训练数据
+├── logs/                          # 日志文件
+├── main.py                        # 主程序入口
+├── complete_pipeline.py           # 完整流程
+├── batch_pipeline_enhanced.py     # 批量处理
+├── run_deduplication.py           # 去重脚本
+├── config.py                      # 配置文件
+└── requirements.txt               # 依赖包
 ```
 
-## 安装和配置
+## 🛠️ 安装
 
-### 1. 安装依赖
+### 环境要求
+- Python 3.8+
+- 依赖包见 `requirements.txt`
 
+### 安装步骤
+
+1. 克隆项目
+```bash
+git clone https://github.com/LBJ-mlo/Graphgen_for_net.git
+cd Graphgen_for_net
+```
+
+2. 安装依赖
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. 配置API密钥
-
-在 `config.py` 中配置您的DeepSeek API密钥：
-
-```python
-DEEPSEEK_API_KEY = "your_api_key_here"
-DEEPSEEK_API_BASE = "https://api.deepseek.com/v1"
-DEEPSEEK_MODEL = "deepseek-chat"
+3. 配置环境
+```bash
+# 编辑 config.py 文件，配置您的 API 密钥和其他设置
 ```
 
-## 使用方法
+## 📖 使用方法
 
-### 1. 启动系统
+### 1. 单案例处理
 
+运行完整流程（生成 -> 去重 -> 质量检测 -> 过滤）：
 ```bash
-# 直接运行主程序
+python complete_pipeline.py
+```
+
+### 2. 批量处理
+
+处理多个故障案例：
+```bash
+python batch_pipeline_enhanced.py
+```
+
+### 3. 单独模块
+
+#### 知识图谱提取
+```bash
 python main.py
 ```
 
-### 2. 处理单个故障案例
+#### 数据去重
+```bash
+python run_deduplication.py
+```
+
+#### 质量检测
+```bash
+cd huanjue
+python main.py
+```
+
+## 📊 输出文件
+
+### 保存的文件类型
+
+1. **关键结果文件**: `data/{case_id}_key_results.json`
+   - 融合所有重要信息的完整结果
+   - 包含处理时间、质量评估、统计信息等
+
+2. **高质量数据文件**: `data/{case_id}_high_quality_data.json`
+   - 只有达到 `high_confidence` 级别的数据
+   - 包含知识图谱和预训练知识
+
+3. **去重数据目录**: `pretrain_data_deduplicated_{case_id}/`
+   - 按类别去重后的预训练数据文件
+   - 包含各种数据类型的去重结果
+
+### 文件命名规则
+- 使用 `case_id` 确保文件名唯一性
+- 避免多个案例处理时的文件冲突
+
+## 🔧 配置说明
+
+### 主要配置项
+
+在 `config.py` 中配置：
 
 ```python
-import asyncio
-from main import GraphGenEnhanced
+# LLM 配置
+LLM_CONFIG = {
+    "api_key": "your_api_key",
+    "model": "deepseek-chat",
+    "base_url": "https://api.deepseek.com"
+}
 
-async def process_case():
-    graphgen = GraphGenEnhanced()
-    
-    fault_text = """某局升级后忙音播放有问题，SPD单板上加载的忙音有问题。
-    忙音是异步音，该问题一般是异步音有问题造成的。"""
-    
-    result = await graphgen.process_fault_case(fault_text, "CASE001")
-    print(f"处理完成，提取了 {result['metadata']['total_entities']} 个实体")
-
-asyncio.run(process_case())
-```
-
-### 3. 批量处理
-
-```python
-import asyncio
-from main import GraphGenEnhanced
-
-async def batch_process():
-    graphgen = GraphGenEnhanced()
-    
-    fault_cases = [
-        {"id": "CASE001", "text": "故障案例1..."},
-        {"id": "CASE002", "text": "故障案例2..."},
-        # 更多案例...
-    ]
-    
-    results = await graphgen.batch_process(fault_cases)
-    
-    for result in results:
-        if "error" not in result:
-            print(f"案例 {result['case_id']} 处理成功")
-        else:
-            print(f"案例 {result['case_id']} 处理失败: {result['error']}")
-
-asyncio.run(batch_process())
-```
-
-## 输出格式
-
-### 知识图谱输出
-
-```json
-{
-  "entities": [
-    {
-      "id": "SPD单板",
-      "name": "SPD单板",
-      "type": "设备",
-      "description": "负责播放忙音的硬件设备",
-      "confidence": 1.0
+# 质量评估配置
+DATA_FILTER_CONFIG = {
+    "quality_thresholds": {
+        "min_overall_score": 0.7,
+        "min_consistency_score": 0.6,
+        "allow_hallucination": False
     }
-  ],
-  "relations": [
-    {
-      "source": "异步音加载问题",
-      "target": "忙音播放问题",
-      "type": "导致",
-      "description": "异步音加载问题导致忙音播放问题",
-      "confidence": 1.0
-    }
-  ],
-  "graph_stats": {
-    "node_count": 5,
-    "edge_count": 4,
-    "entity_types": ["设备", "故障现象", "故障原因"],
-    "relation_types": ["导致", "影响", "解决"]
-  }
+}
+
+# 文件保存配置
+FILE_SAVE_CONFIG = {
+    "save_high_quality_only": True,
+    "save_deduplicated_data": True,
+    "save_key_results": True
 }
 ```
 
-### 预训练知识输出
+## 🔄 完整流程
 
-系统生成自然语言格式的预训练数据，包括：
-
-#### 1. 自然语言文本
-```text
-在电信网络故障诊断中，SPD单板是一个重要的硬件设备，负责播放忙音等异步音。当系统升级后出现忙音播放问题时，通常是由于异步音加载问题造成的。SPD单板需要正确加载语音文件才能正常工作，如果加载失败或配置错误，就会导致忙音无法正常播放。
-
-故障诊断的基本流程包括：首先识别故障现象，然后分析可能的故障原因，接着制定解决方案，最后验证修复效果。在整个过程中，需要综合考虑设备状态、配置参数、环境因素等多个方面。
+```
+原始故障文本
+    ↓
+知识图谱提取 + 预训练数据生成
+    ↓
+按类别MinHash去重 (entity_descriptions, relation_descriptions, qa_pairs, reasoning_chains, reasoning_paths)
+    ↓
+按类别质量检测 (整体 + 各类别)
+    ↓
+按条质量过滤 (只有high_confidence的数据保留)
+    ↓
+保存关键结果文件 (_key_results.json, _high_quality_data.json)
 ```
 
-#### 2. 训练样本
-```json
-{
-  "type": "entity_description",
-  "entity": "SPD单板",
-  "entity_type": "设备",
-  "training_text": "在电信网络故障诊断中，SPD单板是一个设备，负责播放忙音的硬件设备。"
-}
-```
+## 📈 性能特点
 
-#### 3. 问答对
-```json
-{
-  "question": "什么是SPD单板？",
-  "answer": "在电信网络故障诊断中，SPD单板是一个设备，负责播放忙音的硬件设备。"
-}
-```
+- **高效去重**: MinHash 算法确保快速去重
+- **智能过滤**: 基于置信度的多层次质量过滤
+- **文件整合**: 减少输出文件数量，只保存关键信息
+- **避免冲突**: 每个案例有独立的文件命名
 
-#### 4. 输出文件格式
-- `{case_id}_pretrain_text.txt`: 自然语言预训练文本
-- `{case_id}_pretrain_text.jsonl`: JSONL格式的预训练文本
-- `{case_id}_training_samples.jsonl`: 训练样本数据
-- `{case_id}_qa_pairs.jsonl`: 问答对数据
-- `{case_id}_complete_training_data.json`: 完整训练数据
+## 🤝 贡献
 
-## 故障诊断专用配置
+欢迎提交 Issue 和 Pull Request！
 
-系统针对故障诊断领域进行了专门配置：
+## 📄 许可证
 
-### 实体类型
-- 设备：硬件设备、单板、模块等
-- 软件：系统软件、版本等
-- 故障现象：具体的故障表现
-- 故障原因：根本原因分析
-- 解决方案：具体的处理方法
-- 操作步骤：详细的操作流程
-- 配置参数：相关配置信息
-- 时间节点：故障发生时间
-- 影响范围：受影响的用户或系统
-- 建议措施：预防和优化建议
+本项目采用 MIT 许可证。
 
-### 关系类型
-- 导致：故障原因导致故障现象
-- 影响：故障影响特定设备或用户
-- 解决：解决方案解决特定问题
-- 配置：设备配置特定参数
-- 升级：系统升级影响功能
-- 测试：测试验证功能正常
-- 建议：建议措施预防问题
-- 依赖：组件间的依赖关系
-- 包含：整体包含部分
-- 触发：事件触发其他事件
+## 📞 联系方式
 
-## 质量评估
+如有问题，请通过 GitHub Issues 联系。
 
-系统包含多个质量评估指标：
+---
 
-1. **完整性**: 知识是否完整覆盖了故障诊断的关键要素
-2. **准确性**: 知识内容是否准确无误
-3. **实用性**: 知识是否具有实际应用价值
-4. **逻辑性**: 知识结构是否逻辑清晰
-5. **专业性**: 知识是否具有专业深度
-
-## 注意事项
-
-1. 确保API密钥配置正确且有足够的配额
-2. 处理大量案例时注意API调用频率限制
-3. 生成的预训练知识需要人工验证和优化
-4. 建议定期备份生成的知识数据
-
-## 扩展开发
-
-系统采用模块化设计，可以轻松扩展：
-
-1. 添加新的实体类型和关系类型
-2. 自定义质量评估指标
-3. 集成其他LLM服务
-4. 添加可视化功能
-
-## 许可证
-
-本项目采用 Apache License 2.0 许可证。
+**注意**: 使用前请确保配置了正确的 API 密钥和相关设置。
