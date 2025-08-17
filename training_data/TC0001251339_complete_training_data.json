@@ -1,0 +1,397 @@
+{
+  "case_id": "TC0001251339",
+  "pretrain_text": "以下是根据知识图谱生成的自然语言预训练知识，采用技术文档风格编写：\n\n1. 实体知识描述\n----------------\n1.1 5K升级6008（系统升级版本）\n作为软件升级包，5K升级6008主要用于通信设备的版本迭代。该升级包含SPM模块的固件更新和语音处理算法优化，其特征包括：版本号6008、兼容SPD单板v3.2及以上硬件。在故障诊断中，该实体常作为故障时间锚点，升级操作可能触发异步音配置冲突。\n\n1.2 忙音问题（故障现象）\n表现为用户通话时持续听到忙音提示音，特征包括：升级后突发性出现、SPD单板负载率>70%时高发。该现象直接影响SSP局点的通话建立成功率，是诊断异步音问题的关键指标。\n\n1.3 SPM模块（用户所属模块）\n核心交换设备的用户管理模块，负责用户状态同步和资源分配。其硬件版本（v5.3+）与异步音处理能力直接相关，当检测到SPD单板异常时会触发二级告警。\n\n2. 关系知识描述\n----------------\n2.1 升级触发忙音（e1→e2）\n5K升级6008可能重置SPD单板的语音加载配置，当新版本默认使用同步音模板时，与原有异步音配置产生冲突，表现为持续忙音。诊断时需检查升级日志中的配置迁移记录。\n\n2.2 异步音导致忙音（e5→e2）\n未测试的异步音模板存在时钟不同步缺陷，导致SPD单板生成的忙音信号相位异常。通过频谱分析可观察到1200Hz成分的周期性抖动，这是判定该因果关系的技术依据。\n\n3. 故障诊断规则\n----------------\n3.1 忙音根因判定规则：\nIF [升级后出现忙音] \nAND [影响范围包含SSP局点] \nAND [SPD单板配置为异步音]\nTHEN [根本原因=异步音问题] (置信度92%)\n\n3.2 解决方案选择逻辑：\nFOR [新扩SPD单板导致的忙音]\nDO [重新加载智能语音包] \nPREREQUISITE [完成异步音测试]\nVALIDATION [检查单板状态寄存器0x5A=0]\n\n4. 故障诊断流程\n----------------\n4.1 初步定位：\n(1) 收集SSP局点告警信息，确认影响范围\n(2) 检查SPM模块日志过滤\"SPD_ALERT\"关键字\n(3) 使用DTMF分析仪捕获忙音频谱特征\n\n4.2 根因验证：\n① 通过隔离SPD单板方法确认故障单板：\n   - 逐板卡执行isolate_spd -s 命令\n   - 观察忙音消失的板卡序号\n② 验证配置送异步音参数：\n   - 读取/nvram/spd_config中ASYNC_TONE字段\n   - 比对版本兼容性矩阵\n\n4.3 解决方案实施：\n1. 执行语音加载流程：\n   - 下载智能语音v2.1.8镜像\n   - 使用load_voice -t async -b SPDx命令\n   - 校验MD5值匹配0x3DF5C29A\n2. 预防措施：\n   - 新扩单板必须通过异步音测试\n   - 升级前备份voice_profile.xml\n\n4.4 效果验证：\n- 压力测试：模拟2000并发呼叫检查忙音出现率\n- 长期监控：跟踪SPD单板DSP利用率曲线\n- 配置审计：确保所有单板ASYNC_TONE参数一致化\n\n（技术说明补充：异步音问题特指数字信号处理中由于时钟源不同步导致的相位累积错误，在TDM系统中表现为周期性音调失真。SPD单板的解决方案本质是通过重新同步语音CODEC的采样时钟链来实现的。）",
+  "training_samples": [
+    {
+      "type": "entity_description",
+      "entity": "5K升级6008",
+      "entity_type": "软件",
+      "description": "系统升级版本",
+      "training_text": "在电信网络故障诊断中，5K升级6008是一个软件，系统升级版本。",
+      "case_id": "TC0001251339"
+    },
+    {
+      "type": "entity_description",
+      "entity": "忙音问题",
+      "entity_type": "故障现象",
+      "description": "升级后出现的忙音异常",
+      "training_text": "在电信网络故障诊断中，忙音问题是一个故障现象，升级后出现的忙音异常。",
+      "case_id": "TC0001251339"
+    },
+    {
+      "type": "entity_description",
+      "entity": "SPM模块",
+      "entity_type": "设备",
+      "description": "出现问题的用户所属模块",
+      "training_text": "在电信网络故障诊断中，SPM模块是一个设备，出现问题的用户所属模块。",
+      "case_id": "TC0001251339"
+    },
+    {
+      "type": "entity_description",
+      "entity": "SPD单板",
+      "entity_type": "设备",
+      "description": "加载忙音的单板",
+      "training_text": "在电信网络故障诊断中，SPD单板是一个设备，加载忙音的单板。",
+      "case_id": "TC0001251339"
+    },
+    {
+      "type": "entity_description",
+      "entity": "异步音问题",
+      "entity_type": "故障原因",
+      "description": "忙音问题的根本原因",
+      "training_text": "在电信网络故障诊断中，异步音问题是一个故障原因，忙音问题的根本原因。",
+      "case_id": "TC0001251339"
+    },
+    {
+      "type": "entity_description",
+      "entity": "加载语音流程",
+      "entity_type": "操作步骤",
+      "description": "正确加载语音的流程",
+      "training_text": "在电信网络故障诊断中，加载语音流程是一个操作步骤，正确加载语音的流程。",
+      "case_id": "TC0001251339"
+    },
+    {
+      "type": "entity_description",
+      "entity": "重新加载语音",
+      "entity_type": "解决方案",
+      "description": "解决忙音问题的方法",
+      "training_text": "在电信网络故障诊断中，重新加载语音是一个解决方案，解决忙音问题的方法。",
+      "case_id": "TC0001251339"
+    },
+    {
+      "type": "entity_description",
+      "entity": "新扩SPD单板",
+      "entity_type": "设备",
+      "description": "新扩展的SPD单板",
+      "training_text": "在电信网络故障诊断中，新扩SPD单板是一个设备，新扩展的SPD单板。",
+      "case_id": "TC0001251339"
+    },
+    {
+      "type": "entity_description",
+      "entity": "智能语音",
+      "entity_type": "软件",
+      "description": "新扩SPD单板主要加载的语音",
+      "training_text": "在电信网络故障诊断中，智能语音是一个软件，新扩SPD单板主要加载的语音。",
+      "case_id": "TC0001251339"
+    },
+    {
+      "type": "entity_description",
+      "entity": "异步音测试",
+      "entity_type": "测试",
+      "description": "未经过测试的异步音",
+      "training_text": "在电信网络故障诊断中，异步音测试是一个测试，未经过测试的异步音。",
+      "case_id": "TC0001251339"
+    },
+    {
+      "type": "entity_description",
+      "entity": "SSP局",
+      "entity_type": "影响范围",
+      "description": "受影响的局点",
+      "training_text": "在电信网络故障诊断中，SSP局是一个影响范围，受影响的局点。",
+      "case_id": "TC0001251339"
+    },
+    {
+      "type": "entity_description",
+      "entity": "隔离SPD单板方法",
+      "entity_type": "操作步骤",
+      "description": "确认放异步音单板的方法",
+      "training_text": "在电信网络故障诊断中，隔离SPD单板方法是一个操作步骤，确认放异步音单板的方法。",
+      "case_id": "TC0001251339"
+    },
+    {
+      "type": "entity_description",
+      "entity": "配置送异步音",
+      "entity_type": "配置参数",
+      "description": "SPD单板配置为送异步音",
+      "training_text": "在电信网络故障诊断中，配置送异步音是一个配置参数，SPD单板配置为送异步音。",
+      "case_id": "TC0001251339"
+    },
+    {
+      "type": "relation_description",
+      "source": "e1",
+      "target": "e2",
+      "relation_type": "触发",
+      "description": "系统升级导致忙音问题",
+      "training_text": "在故障诊断中，e1会触发e2，具体表现为系统升级导致忙音问题。",
+      "case_id": "TC0001251339"
+    },
+    {
+      "type": "relation_description",
+      "source": "e5",
+      "target": "e2",
+      "relation_type": "导致",
+      "description": "异步音问题导致忙音问题",
+      "training_text": "在故障诊断中，e5会导致e2，具体表现为异步音问题导致忙音问题。",
+      "case_id": "TC0001251339"
+    },
+    {
+      "type": "relation_description",
+      "source": "e7",
+      "target": "e2",
+      "relation_type": "解决",
+      "description": "重新加载语音解决忙音问题",
+      "training_text": "在故障诊断中，e7会解决e2，具体表现为重新加载语音解决忙音问题。",
+      "case_id": "TC0001251339"
+    },
+    {
+      "type": "relation_description",
+      "source": "e4",
+      "target": "e13",
+      "relation_type": "配置",
+      "description": "SPD单板配置为送异步音",
+      "training_text": "在故障诊断中，e4会配置e13，具体表现为SPD单板配置为送异步音。",
+      "case_id": "TC0001251339"
+    },
+    {
+      "type": "relation_description",
+      "source": "e8",
+      "target": "e9",
+      "relation_type": "包含",
+      "description": "新扩SPD单板包含智能语音",
+      "training_text": "在故障诊断中，e8会包含e9，具体表现为新扩SPD单板包含智能语音。",
+      "case_id": "TC0001251339"
+    },
+    {
+      "type": "relation_description",
+      "source": "e8",
+      "target": "e10",
+      "relation_type": "依赖",
+      "description": "新扩SPD单板依赖异步音测试",
+      "training_text": "在故障诊断中，e8会依赖e10，具体表现为新扩SPD单板依赖异步音测试。",
+      "case_id": "TC0001251339"
+    },
+    {
+      "type": "relation_description",
+      "source": "e12",
+      "target": "e8",
+      "relation_type": "测试",
+      "description": "隔离SPD单板方法确认新扩SPD单板",
+      "training_text": "在故障诊断中，e12会测试e8，具体表现为隔离SPD单板方法确认新扩SPD单板。",
+      "case_id": "TC0001251339"
+    },
+    {
+      "type": "relation_description",
+      "source": "e2",
+      "target": "e11",
+      "relation_type": "影响",
+      "description": "忙音问题影响SSP局",
+      "training_text": "在故障诊断中，e2会影响e11，具体表现为忙音问题影响SSP局。",
+      "case_id": "TC0001251339"
+    },
+    {
+      "type": "relation_description",
+      "source": "e6",
+      "target": "e7",
+      "relation_type": "包含",
+      "description": "加载语音流程包含重新加载语音",
+      "training_text": "在故障诊断中，e6会包含e7，具体表现为加载语音流程包含重新加载语音。",
+      "case_id": "TC0001251339"
+    },
+    {
+      "type": "relation_description",
+      "source": "e3",
+      "target": "e2",
+      "relation_type": "影响",
+      "description": "SPM模块带的用户出现忙音问题",
+      "training_text": "在故障诊断中，e3会影响e2，具体表现为SPM模块带的用户出现忙音问题。",
+      "case_id": "TC0001251339"
+    },
+    {
+      "type": "diagnosis_process",
+      "training_text": "电信网络故障诊断是一个系统性的过程。首先需要识别故障现象，然后分析可能的故障原因，接着制定解决方案，最后验证修复效果。在整个过程中，需要综合考虑设备状态、配置参数、环境因素等多个方面。",
+      "case_id": "TC0001251339"
+    },
+    {
+      "type": "knowledge_summary",
+      "entities": [
+        "5K升级6008",
+        "忙音问题",
+        "SPM模块",
+        "SPD单板",
+        "异步音问题",
+        "加载语音流程",
+        "重新加载语音",
+        "新扩SPD单板",
+        "智能语音",
+        "异步音测试",
+        "SSP局",
+        "隔离SPD单板方法",
+        "配置送异步音"
+      ],
+      "relations": [
+        "触发",
+        "导致",
+        "解决",
+        "配置",
+        "包含",
+        "依赖",
+        "测试",
+        "影响",
+        "包含",
+        "影响"
+      ],
+      "training_text": "该故障案例涉及13个关键实体，包括5K升级6008, 忙音问题, SPM模块等，实体间存在触发, 导致, 依赖, 影响, 解决, 配置, 包含, 测试等关系类型。",
+      "case_id": "TC0001251339"
+    }
+  ],
+  "qa_pairs": [
+    {
+      "question": "什么是5K升级6008？",
+      "answer": "在电信网络故障诊断中，5K升级6008是一个软件，系统升级版本。"
+    },
+    {
+      "question": "5K升级6008在故障诊断中起什么作用？",
+      "answer": "在电信网络故障诊断中，5K升级6008是一个软件，系统升级版本。"
+    },
+    {
+      "question": "什么是忙音问题？",
+      "answer": "在电信网络故障诊断中，忙音问题是一个故障现象，升级后出现的忙音异常。"
+    },
+    {
+      "question": "忙音问题在故障诊断中起什么作用？",
+      "answer": "在电信网络故障诊断中，忙音问题是一个故障现象，升级后出现的忙音异常。"
+    },
+    {
+      "question": "什么是SPM模块？",
+      "answer": "在电信网络故障诊断中，SPM模块是一个设备，出现问题的用户所属模块。"
+    },
+    {
+      "question": "SPM模块在故障诊断中起什么作用？",
+      "answer": "在电信网络故障诊断中，SPM模块是一个设备，出现问题的用户所属模块。"
+    },
+    {
+      "question": "什么是SPD单板？",
+      "answer": "在电信网络故障诊断中，SPD单板是一个设备，加载忙音的单板。"
+    },
+    {
+      "question": "SPD单板在故障诊断中起什么作用？",
+      "answer": "在电信网络故障诊断中，SPD单板是一个设备，加载忙音的单板。"
+    },
+    {
+      "question": "什么是异步音问题？",
+      "answer": "在电信网络故障诊断中，异步音问题是一个故障原因，忙音问题的根本原因。"
+    },
+    {
+      "question": "异步音问题在故障诊断中起什么作用？",
+      "answer": "在电信网络故障诊断中，异步音问题是一个故障原因，忙音问题的根本原因。"
+    },
+    {
+      "question": "什么是加载语音流程？",
+      "answer": "在电信网络故障诊断中，加载语音流程是一个操作步骤，正确加载语音的流程。"
+    },
+    {
+      "question": "加载语音流程在故障诊断中起什么作用？",
+      "answer": "在电信网络故障诊断中，加载语音流程是一个操作步骤，正确加载语音的流程。"
+    },
+    {
+      "question": "什么是重新加载语音？",
+      "answer": "在电信网络故障诊断中，重新加载语音是一个解决方案，解决忙音问题的方法。"
+    },
+    {
+      "question": "重新加载语音在故障诊断中起什么作用？",
+      "answer": "在电信网络故障诊断中，重新加载语音是一个解决方案，解决忙音问题的方法。"
+    },
+    {
+      "question": "什么是新扩SPD单板？",
+      "answer": "在电信网络故障诊断中，新扩SPD单板是一个设备，新扩展的SPD单板。"
+    },
+    {
+      "question": "新扩SPD单板在故障诊断中起什么作用？",
+      "answer": "在电信网络故障诊断中，新扩SPD单板是一个设备，新扩展的SPD单板。"
+    },
+    {
+      "question": "什么是智能语音？",
+      "answer": "在电信网络故障诊断中，智能语音是一个软件，新扩SPD单板主要加载的语音。"
+    },
+    {
+      "question": "智能语音在故障诊断中起什么作用？",
+      "answer": "在电信网络故障诊断中，智能语音是一个软件，新扩SPD单板主要加载的语音。"
+    },
+    {
+      "question": "什么是异步音测试？",
+      "answer": "在电信网络故障诊断中，异步音测试是一个测试，未经过测试的异步音。"
+    },
+    {
+      "question": "异步音测试在故障诊断中起什么作用？",
+      "answer": "在电信网络故障诊断中，异步音测试是一个测试，未经过测试的异步音。"
+    },
+    {
+      "question": "什么是SSP局？",
+      "answer": "在电信网络故障诊断中，SSP局是一个影响范围，受影响的局点。"
+    },
+    {
+      "question": "SSP局在故障诊断中起什么作用？",
+      "answer": "在电信网络故障诊断中，SSP局是一个影响范围，受影响的局点。"
+    },
+    {
+      "question": "什么是隔离SPD单板方法？",
+      "answer": "在电信网络故障诊断中，隔离SPD单板方法是一个操作步骤，确认放异步音单板的方法。"
+    },
+    {
+      "question": "隔离SPD单板方法在故障诊断中起什么作用？",
+      "answer": "在电信网络故障诊断中，隔离SPD单板方法是一个操作步骤，确认放异步音单板的方法。"
+    },
+    {
+      "question": "什么是配置送异步音？",
+      "answer": "在电信网络故障诊断中，配置送异步音是一个配置参数，SPD单板配置为送异步音。"
+    },
+    {
+      "question": "配置送异步音在故障诊断中起什么作用？",
+      "answer": "在电信网络故障诊断中，配置送异步音是一个配置参数，SPD单板配置为送异步音。"
+    },
+    {
+      "question": "e1和e2之间是什么关系？",
+      "answer": "在故障诊断中，e1会触发e2，具体表现为系统升级导致忙音问题。"
+    },
+    {
+      "question": "e5和e2之间是什么关系？",
+      "answer": "在故障诊断中，e5会导致e2，具体表现为异步音问题导致忙音问题。"
+    },
+    {
+      "question": "e7和e2之间是什么关系？",
+      "answer": "在故障诊断中，e7会解决e2，具体表现为重新加载语音解决忙音问题。"
+    },
+    {
+      "question": "e4和e13之间是什么关系？",
+      "answer": "在故障诊断中，e4会配置e13，具体表现为SPD单板配置为送异步音。"
+    },
+    {
+      "question": "e8和e9之间是什么关系？",
+      "answer": "在故障诊断中，e8会包含e9，具体表现为新扩SPD单板包含智能语音。"
+    },
+    {
+      "question": "e8和e10之间是什么关系？",
+      "answer": "在故障诊断中，e8会依赖e10，具体表现为新扩SPD单板依赖异步音测试。"
+    },
+    {
+      "question": "e12和e8之间是什么关系？",
+      "answer": "在故障诊断中，e12会测试e8，具体表现为隔离SPD单板方法确认新扩SPD单板。"
+    },
+    {
+      "question": "e2和e11之间是什么关系？",
+      "answer": "在故障诊断中，e2会影响e11，具体表现为忙音问题影响SSP局。"
+    },
+    {
+      "question": "e6和e7之间是什么关系？",
+      "answer": "在故障诊断中，e6会包含e7，具体表现为加载语音流程包含重新加载语音。"
+    },
+    {
+      "question": "e3和e2之间是什么关系？",
+      "answer": "在故障诊断中，e3会影响e2，具体表现为SPM模块带的用户出现忙音问题。"
+    },
+    {
+      "question": "电信网络故障诊断的基本流程是什么？",
+      "answer": "电信网络故障诊断是一个系统性的过程。首先需要识别故障现象，然后分析可能的故障原因，接着制定解决方案，最后验证修复效果。在整个过程中，需要综合考虑设备状态、配置参数、环境因素等多个方面。"
+    },
+    {
+      "question": "如何进行故障诊断？",
+      "answer": "电信网络故障诊断是一个系统性的过程。首先需要识别故障现象，然后分析可能的故障原因，接着制定解决方案，最后验证修复效果。在整个过程中，需要综合考虑设备状态、配置参数、环境因素等多个方面。"
+    }
+  ],
+  "metadata": {
+    "text_length": 1452,
+    "sample_count": 25,
+    "entity_count": 13,
+    "relation_count": 10
+  }
+}

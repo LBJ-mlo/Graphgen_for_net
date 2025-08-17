@@ -1,0 +1,187 @@
+{
+  "entities": [
+    {
+      "id": "e1",
+      "name": "SPD单板",
+      "type": "设备",
+      "description": "用于加载和播放忙音（异步音）的单板",
+      "confidence": 1.0
+    },
+    {
+      "id": "e2",
+      "name": "忙音",
+      "type": "故障现象",
+      "description": "升级后播放有问题的异步音",
+      "confidence": 1.0
+    },
+    {
+      "id": "e3",
+      "name": "异步音未加载或加载错误",
+      "type": "故障原因",
+      "description": "SPD单板上未正确加载异步音或加载的异步音有问题",
+      "confidence": 1.0
+    },
+    {
+      "id": "e4",
+      "name": "检查并加载异步音",
+      "type": "解决方案",
+      "description": "检查SPD单板上是否已加载异步音，未加载则按流程加载，已加载则重新加载",
+      "confidence": 1.0
+    },
+    {
+      "id": "e5",
+      "name": "隔离SPD单板",
+      "type": "操作步骤",
+      "description": "通过隔离SPD单板确认当前播放异步音的单板",
+      "confidence": 1.0
+    },
+    {
+      "id": "e6",
+      "name": "新扩SPD单板",
+      "type": "设备",
+      "description": "新扩展的SPD单板，主要用于加载智能语音",
+      "confidence": 1.0
+    },
+    {
+      "id": "e7",
+      "name": "异步音未测试",
+      "type": "故障原因",
+      "description": "新扩SPD单板加载的异步音未经过测试",
+      "confidence": 1.0
+    },
+    {
+      "id": "e8",
+      "name": "配置为送异步音",
+      "type": "配置参数",
+      "description": "SPD单板配置为送异步音",
+      "confidence": 1.0
+    },
+    {
+      "id": "e9",
+      "name": "升级",
+      "type": "时间节点",
+      "description": "系统升级后问题出现",
+      "confidence": 1.0
+    },
+    {
+      "id": "e10",
+      "name": "SSP局点",
+      "type": "影响范围",
+      "description": "受影响的SSP局点",
+      "confidence": 1.0
+    },
+    {
+      "id": "e11",
+      "name": "主备用方式",
+      "type": "配置参数",
+      "description": "SPD单板按主备用方式播放异步音",
+      "confidence": 1.0
+    },
+    {
+      "id": "e12",
+      "name": "配置两块SPD送异步音并测试",
+      "type": "建议措施",
+      "description": "建议一个局点只需两块SPD配置为送异步音，并严格测试异步音加载是否正确",
+      "confidence": 1.0
+    }
+  ],
+  "relations": [
+    {
+      "source": "e3",
+      "target": "e2",
+      "type": "导致",
+      "description": "异步音未加载或加载错误导致忙音播放有问题",
+      "confidence": 1.0
+    },
+    {
+      "source": "e4",
+      "target": "e2",
+      "type": "解决",
+      "description": "检查并加载异步音解决忙音播放问题",
+      "confidence": 1.0
+    },
+    {
+      "source": "e1",
+      "target": "e8",
+      "type": "配置",
+      "description": "SPD单板配置为送异步音",
+      "confidence": 1.0
+    },
+    {
+      "source": "e9",
+      "target": "e2",
+      "type": "触发",
+      "description": "系统升级后触发忙音播放问题",
+      "confidence": 1.0
+    },
+    {
+      "source": "e6",
+      "target": "e7",
+      "type": "导致",
+      "description": "新扩SPD单板未测试异步音导致问题",
+      "confidence": 1.0
+    },
+    {
+      "source": "e10",
+      "target": "e2",
+      "type": "影响",
+      "description": "忙音播放问题影响SSP局点",
+      "confidence": 1.0
+    },
+    {
+      "source": "e11",
+      "target": "e1",
+      "type": "配置",
+      "description": "SPD单板按主备用方式播放异步音",
+      "confidence": 1.0
+    },
+    {
+      "source": "e12",
+      "target": "e2",
+      "type": "建议",
+      "description": "配置两块SPD送异步音并测试可预防忙音播放问题",
+      "confidence": 1.0
+    },
+    {
+      "source": "e5",
+      "target": "e6",
+      "type": "测试",
+      "description": "通过隔离SPD单板确认当前播放异步音的单板",
+      "confidence": 1.0
+    },
+    {
+      "source": "e6",
+      "target": "e1",
+      "type": "依赖",
+      "description": "新扩SPD单板依赖SPD单板功能",
+      "confidence": 1.0
+    }
+  ],
+  "graph_stats": {
+    "node_count": 12,
+    "edge_count": 10,
+    "entity_types": [
+      "操作步骤",
+      "故障现象",
+      "影响范围",
+      "建议措施",
+      "设备",
+      "解决方案",
+      "配置参数",
+      "故障原因",
+      "时间节点"
+    ],
+    "relation_types": [
+      "测试",
+      "影响",
+      "触发",
+      "解决",
+      "依赖",
+      "配置",
+      "导致",
+      "建议"
+    ],
+    "is_connected": false,
+    "density": 0.07575757575757576
+  }
+}

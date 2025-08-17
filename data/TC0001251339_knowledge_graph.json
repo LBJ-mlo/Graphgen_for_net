@@ -1,0 +1,174 @@
+{
+  "entities": [
+    {
+      "id": "e1",
+      "name": "SPD单板",
+      "type": "设备",
+      "description": "用于加载和播放异步音的单板",
+      "confidence": 1.0
+    },
+    {
+      "id": "e2",
+      "name": "忙音播放问题",
+      "type": "故障现象",
+      "description": "升级后忙音播放异常",
+      "confidence": 1.0
+    },
+    {
+      "id": "e3",
+      "name": "系统升级（5K升6008）",
+      "type": "软件",
+      "description": "系统版本升级",
+      "confidence": 1.0
+    },
+    {
+      "id": "e4",
+      "name": "异步音未加载或加载错误",
+      "type": "故障原因",
+      "description": "新扩SPD单板未正确加载异步音",
+      "confidence": 1.0
+    },
+    {
+      "id": "e5",
+      "name": "重新加载异步音",
+      "type": "解决方案",
+      "description": "按照正确流程加载或重新加载异步音",
+      "confidence": 1.0
+    },
+    {
+      "id": "e6",
+      "name": "隔离SPD单板",
+      "type": "操作步骤",
+      "description": "确认当前播放异步音的单板",
+      "confidence": 1.0
+    },
+    {
+      "id": "e7",
+      "name": "SPD单板配置",
+      "type": "配置参数",
+      "description": "配置SPD单板送异步音",
+      "confidence": 1.0
+    },
+    {
+      "id": "e8",
+      "name": "2004-07-29",
+      "type": "时间节点",
+      "description": "案例发布时间",
+      "confidence": 1.0
+    },
+    {
+      "id": "e9",
+      "name": "SPM模块用户",
+      "type": "影响范围",
+      "description": "SPM模块带的用户受影响",
+      "confidence": 1.0
+    },
+    {
+      "id": "e10",
+      "name": "限制SPD单板数量并测试",
+      "type": "建议措施",
+      "description": "建议一个局点只需两块SPD配置为送异步音并严格测试",
+      "confidence": 1.0
+    }
+  ],
+  "relations": [
+    {
+      "source": "e3",
+      "target": "e2",
+      "type": "导致",
+      "description": "系统升级后导致忙音播放问题",
+      "confidence": 1.0
+    },
+    {
+      "source": "e4",
+      "target": "e2",
+      "type": "导致",
+      "description": "异步音未正确加载导致忙音播放问题",
+      "confidence": 1.0
+    },
+    {
+      "source": "e5",
+      "target": "e2",
+      "type": "解决",
+      "description": "重新加载异步音解决忙音播放问题",
+      "confidence": 1.0
+    },
+    {
+      "source": "e1",
+      "target": "e7",
+      "type": "配置",
+      "description": "SPD单板配置为送异步音",
+      "confidence": 1.0
+    },
+    {
+      "source": "e3",
+      "target": "e1",
+      "type": "影响",
+      "description": "系统升级影响SPD单板功能",
+      "confidence": 1.0
+    },
+    {
+      "source": "e6",
+      "target": "e1",
+      "type": "测试",
+      "description": "隔离SPD单板测试确认问题单板",
+      "confidence": 1.0
+    },
+    {
+      "source": "e10",
+      "target": "e1",
+      "type": "建议",
+      "description": "建议限制SPD单板数量并测试",
+      "confidence": 1.0
+    },
+    {
+      "source": "e1",
+      "target": "e9",
+      "type": "影响",
+      "description": "SPD单板问题影响SPM模块用户",
+      "confidence": 1.0
+    },
+    {
+      "source": "e1",
+      "target": "e4",
+      "type": "包含",
+      "description": "SPD单板包含异步音加载功能",
+      "confidence": 1.0
+    },
+    {
+      "source": "e3",
+      "target": "e4",
+      "type": "触发",
+      "description": "系统升级触发异步音加载问题",
+      "confidence": 1.0
+    }
+  ],
+  "graph_stats": {
+    "node_count": 10,
+    "edge_count": 10,
+    "entity_types": [
+      "设备",
+      "建议措施",
+      "操作步骤",
+      "配置参数",
+      "故障现象",
+      "软件",
+      "影响范围",
+      "时间节点",
+      "解决方案",
+      "故障原因"
+    ],
+    "relation_types": [
+      "包含",
+      "建议",
+      "测试",
+      "解决",
+      "配置",
+      "影响",
+      "触发",
+      "导致"
+    ],
+    "is_connected": false,
+    "density": 0.1111111111111111
+  }
+}

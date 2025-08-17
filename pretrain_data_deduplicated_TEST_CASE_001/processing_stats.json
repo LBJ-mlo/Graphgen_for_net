@@ -1,0 +1,32 @@
+{
+  "knowledge_texts": {
+    "original": 10,
+    "deduplicated": 10,
+    "removed": 0
+  },
+  "reasoning_texts": {
+    "original": 5,
+    "deduplicated": 5,
+    "removed": 0
+  },
+  "qa_pairs": {
+    "original": 31,
+    "deduplicated": 13,
+    "removed": 18
+  },
+  "entity_descriptions": {
+    "original": 12,
+    "deduplicated": 12,
+    "removed": 0
+  },
+  "relation_descriptions": {
+    "original": 10,
+    "deduplicated": 10,
+    "removed": 0
+  },
+  "diagnosis_processes": {
+    "original": 1,
+    "deduplicated": 1,
+    "removed": 0
+  }
+}

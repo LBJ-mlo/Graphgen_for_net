@@ -1,0 +1,91 @@
+{
+  "case_id": "TEST_CASE_001",
+  "original_text": "某局升级后忙音播放有问题，SPD单板上加载的忙音有问题。\n        忙音是异步音，该问题一般是异步音有问题造成的，可以先查看一下SPD单板上是否已经加载该语音，\n        如果没有加载，需要按照正确流程加载该语音，如果已经加载，需要重新加载该语音。\n        此局点的问题是升级前正常，升级后问题出现。该局是SSP局，通过观察，发现该局有4块SPD单板配置了送异步音，\n        由于只会有一块SPD单板放异步音，利用隔离SPD单板的方法，可以确认现在放异步音的单板。\n        发现此单板是一块新扩的SPD单板，主要用来加载智能语音，加载语音后，异步音没有经过测试，\n        但是因为此单板配置为送异步音，导致重新加载交换机后，选择了这块SPD单板播放异步音，出现上述故障。\n        SPD放异步音是按照主备用方式，正常运行时异步音由一块单板播放，强烈建议一个局点尤其是SSP局点，\n        只需两块SPD配置为送异步音即可，并严格测试异步音加载是否正确，这样是可以保证异步音的正确播放的。",
+  "processing_summary": {
+    "total_time": 285.2097182273865,
+    "generation_time": 213.3276994228363,
+    "deduplication_time": 0.11174964904785156,
+    "quality_detection_time": 71.77026915550232,
+    "filter_time": 0.0
+  },
+  "quality_assessment": {
+    "overall_score": 0.925,
+    "consistency_score": 0.9,
+    "hallucination_detected": true,
+    "passed_quality_check": false,
+    "quality_filtered": true
+  },
+  "generation_stats": {
+    "entities": 0,
+    "relations": 0,
+    "entity_types": [],
+    "relation_types": []
+  },
+  "deduplication_stats": {
+    "knowledge_texts": {
+      "original": 10,
+      "deduplicated": 10,
+      "removed": 0,
+      "removal_rate": 0.0
+    },
+    "reasoning_texts": {
+      "original": 5,
+      "deduplicated": 5,
+      "removed": 0,
+      "removal_rate": 0.0
+    },
+    "qa_pairs": {
+      "original": 31,
+      "deduplicated": 13,
+      "removed": 18,
+      "removal_rate": 58.06451612903226
+    },
+    "entity_descriptions": {
+      "original": 12,
+      "deduplicated": 12,
+      "removed": 0,
+      "removal_rate": 0.0
+    },
+    "relation_descriptions": {
+      "original": 10,
+      "deduplicated": 10,
+      "removed": 0,
+      "removal_rate": 0.0
+    },
+    "diagnosis_processes": {
+      "original": 1,
+      "deduplicated": 1,
+      "removed": 0,
+      "removal_rate": 0.0
+    }
+  },
+  "final_data": {
+    "knowledge_graph": {
+      "entities": [],
+      "relations": [],
+      "graph_stats": {
+        "node_count": 0,
+        "edge_count": 0,
+        "entity_types": [],
+        "relation_types": []
+      }
+    },
+    "pretrain_knowledge": {
+      "pretrain_text": "",
+      "training_samples": [],
+      "qa_pairs": [],
+      "reasoning_chains": [],
+      "reasoning_paths": [],
+      "reasoning_qa_pairs": [],
+      "metadata": {
+        "text_length": 0,
+        "sample_count": 0,
+        "entity_count": 0,
+        "relation_count": 0,
+        "reasoning_path_count": 0,
+        "reasoning_chain_count": 0,
+        "reasoning_qa_count": 0
+      }
+    }
+  }
+}
